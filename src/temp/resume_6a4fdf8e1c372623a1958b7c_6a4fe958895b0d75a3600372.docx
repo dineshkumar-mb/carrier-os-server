@@ -1,0 +1,179 @@
+
+      <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+      <head><title>Resume</title></head>
+      <body>
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            body {
+              font-family: 'Arial', sans-serif;
+              color: #333333;
+              line-height: 1.5;
+              padding: 40px;
+              font-size: 14px;
+            }
+            .header {
+              text-align: center;
+              margin-bottom: 25px;
+            }
+            .header h1 {
+              margin: 0 0 5px 0;
+              font-size: 26px;
+              color: #111111;
+              text-transform: uppercase;
+              letter-spacing: 1px;
+            }
+            .contact-info {
+              font-size: 12px;
+              color: #666666;
+            }
+            .section-title {
+              font-size: 16px;
+              color: #222222;
+              border-bottom: 1.5px solid #222222;
+              padding-bottom: 3px;
+              margin-top: 20px;
+              margin-bottom: 10px;
+              text-transform: uppercase;
+              font-weight: bold;
+              letter-spacing: 0.5px;
+            }
+            .experience-item, .project-item {
+              margin-bottom: 15px;
+            }
+            .item-header {
+              display: flex;
+              justify-content: space-between;
+              font-weight: bold;
+              color: #111111;
+            }
+            .item-subheader {
+              font-style: italic;
+              color: #555555;
+              margin-bottom: 5px;
+            }
+            .highlights {
+              margin: 0;
+              padding-left: 20px;
+            }
+            .highlights li {
+              margin-bottom: 3px;
+            }
+            .skills-list {
+              font-weight: bold;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="header">
+            <h1>Dinesh kumar M B</h1>
+            <div class="contact-info">
+              dineshkumarmannibrundha@gmail.com | 
+            </div>
+          </div>
+          
+          <div class="section-title">Skills</div>
+          <p><span class="skills-list">React.js • Redux Toolkit • React Router • HTML5 • CSS3 • Tailwind CSS • Node.js • Express.js • REST APIs • JWT • RBAC • MongoDB • MySQL • AWS EC2 • Docker • Git • GitHub Actions • CI/CD • RAG • Gemini API • OpenAI API • AI Agents • OCR • Prompt Engineering • n8n • Workflow Automation • JavaScript • SQL • DSA • Design Patterns • System Design</span></p>
+
+          <div class="section-title">Experience</div>
+          
+            <div class="experience-item">
+              <div class="item-header">
+                <span>Full Stack Developer</span>
+                <span>Jun 2025 – Present</span>
+              </div>
+              <div class="item-subheader">Innotrat Labs</div>
+              <ul class="highlights">
+                <li>Developed workflow visualization and simulation modules for InnoIDE, a MERN-based low-code engineering platform, enabling engineers to design and validate automation workflows through an interactive React-based interface. Improved platform maintainability and user experience by building reusable React components, integrating REST APIs, and optimizing frontend architecture using Redux Toolkit.</li>
+              </ul>
+            </div>
+          
+            <div class="experience-item">
+              <div class="item-header">
+                <span>Frontend Developer</span>
+                <span>Jul 2022 – Jun 2025</span>
+              </div>
+              <div class="item-subheader">Neelan Oxysoft Pvt Ltd</div>
+              <ul class="highlights">
+                <li>Developed and maintained React.js-based business applications by integrating REST APIs and MySQL-backed services to support customer-facing workflows and operational processes. Accelerated feature implementation and improved code maintainability by building reusable UI components and collaborating with Agile teams on production releases.</li>
+              </ul>
+            </div>
+          
+            <div class="experience-item">
+              <div class="item-header">
+                <span>Web Development Training</span>
+                <span>Dec 2021 – May 2022</span>
+              </div>
+              <div class="item-subheader">Livewire</div>
+              <ul class="highlights">
+                <li>Transitioned into software development through intensive training in JavaScript, HTML5, CSS3, and Bootstrap, delivering 10+ responsive web projects to strengthen frontend engineering fundamentals.</li>
+              </ul>
+            </div>
+          
+            <div class="experience-item">
+              <div class="item-header">
+                <span>Senior Accountant</span>
+                <span>Jan 2018 – Nov 2021</span>
+              </div>
+              <div class="item-subheader">Sri Renuka Devi Silks</div>
+              <ul class="highlights">
+                <li>Managed financial reporting, regulatory compliance, account reconciliation, and day-to-day business operations.</li>
+              </ul>
+            </div>
+          
+            <div class="experience-item">
+              <div class="item-header">
+                <span>Family Caregiving Sabbatical</span>
+                <span>Dec 2016 – Dec 2017</span>
+              </div>
+              <div class="item-subheader">family</div>
+              <ul class="highlights">
+                <li>Provided full-time family caregiving support while pursuing self-learning in web technologies and software development fundamentals.</li>
+              </ul>
+            </div>
+          
+            <div class="experience-item">
+              <div class="item-header">
+                <span>Production Trainee</span>
+                <span>May 2015 – Nov 2016</span>
+              </div>
+              <div class="item-subheader">Sungwoo Hitech</div>
+              <ul class="highlights">
+                <li>Supported production planning, quality assurance, process documentation, and manufacturing operations in an automotive component environment.</li>
+              </ul>
+            </div>
+          
+
+          <div class="section-title">Projects</div>
+          
+            <div class="project-item">
+              <div class="item-header">
+                <span>AI-Powered EMI Calculator (RAG Enabled)</span>
+                <span>React.js, Node.js, MongoDB, Gemini AI</span>
+              </div>
+              <p style="margin: 3px 0 0 0;"></p>
+            </div>
+          
+            <div class="project-item">
+              <div class="item-header">
+                <span>TaskFlow – AI-Powered Sprint Management SaaS</span>
+                <span>React.js, Node.js, MongoDB, OpenAI, Cashfree</span>
+              </div>
+              <p style="margin: 3px 0 0 0;"></p>
+            </div>
+          
+            <div class="project-item">
+              <div class="item-header">
+                <span>AI Code Reviewer</span>
+                <span>React.js, Node.js, Google Gemini API</span>
+              </div>
+              <p style="margin: 3px 0 0 0;"></p>
+            </div>
+          
+        </body>
+      </html>
+    </body>
+      </html>
+    
