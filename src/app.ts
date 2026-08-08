@@ -56,3 +56,5 @@ app.get('/health', (req, res) => {
 server.listen(port, () => {
   console.log(`[Carrier OS Server] running on port ${port}`);
 });
+
+export default app;
