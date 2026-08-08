@@ -47,6 +47,15 @@ export const getDashboardStats = async (req: AuthRequest, res: Response) => {
     const interviewCount = await Application.countDocuments({ userId, status: 'Interview' });
     const rejectedCount = await Application.countDocuments({ userId, status: 'Rejected' });
 
+    // Dynamically calculate Career Health Score (0 - 100) from real DB activity
+    let healthScore = 50; // Base score for active profile
+    if (jobsCount > 0 || totalApplications > 0) {
+      const atsComponent = (avgAtsScore || 70) * 0.4;
+      const appComponent = Math.min(30, totalApplications * 3);
+      const interviewComponent = interviewCount > 0 ? 30 : (appliedCount > 0 ? 15 : 5);
+      healthScore = Math.min(100, Math.max(10, Math.round(atsComponent + appComponent + interviewComponent)));
+    }
+
     res.json({
       jobsFound: jobsCount,
       autoApplied: appliedCount,
@@ -55,7 +64,8 @@ export const getDashboardStats = async (req: AuthRequest, res: Response) => {
       totalApplications,
       successRate: `${successRate}%`,
       interviewCount,
-      rejectedCount
+      rejectedCount,
+      careerHealthScore: healthScore
     });
   } catch (error) {
     console.error('Error in getDashboardStats controller:', error);
