@@ -49,6 +49,15 @@ app.use('/api/market', protect, marketRoutes);
 app.use('/api/policy', protect, policyRoutes);
 app.use('/api/autonomous', protect, autonomousRoutes);
 
+app.get('/', (req, res) => {
+  res.json({
+    status: 'ok',
+    name: 'Carrier OS API Engine v1.0',
+    health: '/health',
+    readiness: '/health/ready'
+  });
+});
+
 app.get('/health', (req, res) => {
   res.json({ status: 'ok', message: 'Carrier OS v1.0 API Engine is running' });
 });
