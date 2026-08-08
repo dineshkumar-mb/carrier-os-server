@@ -4,6 +4,7 @@ import { JobMatch } from '../../models/JobMatch';
 import { AuthRequest } from '../middleware/authMiddleware';
 import { runJobDiscovery } from '../../services/jobDiscovery/discoveryEngine';
 import { scheduleDiscoveryCycle } from '../../workers/schedulerWorker';
+import { ensurePortalJobsExist } from '../../services/jobDiscovery/defaultPortalJobs';
 
 const enrichJobsWithMatches = (jobs: any[], matches: any[]) => {
   const matchMap = new Map(matches.map(m => [m.jobId.toString(), m]));
@@ -37,6 +38,8 @@ export const getJobs = async (req: AuthRequest, res: Response) => {
     if (!userId) {
       return res.status(401).json({ message: 'Authentication required' });
     }
+
+    await ensurePortalJobsExist(userId.toString());
 
     const jobs = await Job.find({ status: 'active' }).sort({ createdAt: -1 });
     const matches = await JobMatch.find({ userId });
