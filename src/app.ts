@@ -53,8 +53,10 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok', message: 'Carrier OS v1.0 API Engine is running' });
 });
 
-server.listen(port, () => {
-  console.log(`[Carrier OS Server] running on port ${port}`);
-});
+if (!process.env.VERCEL) {
+  server.listen(port, () => {
+    console.log(`[Carrier OS Server] running on port ${port}`);
+  });
+}
 
 export default app;
