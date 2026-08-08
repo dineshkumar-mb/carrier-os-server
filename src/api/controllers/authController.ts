@@ -75,7 +75,8 @@ export const forgotPassword = async (req: Request, res: Response) => {
     user.resetPasswordExpires = new Date(Date.now() + 3600000);
     await user.save();
 
-    const resetUrl = `http://localhost:5173/reset-password/${resetToken}`;
+    const clientUrl = req.headers.origin || process.env.CLIENT_URL || (process.env.VERCEL ? 'https://carrier-os-client.vercel.app' : 'http://localhost:5173');
+    const resetUrl = `${clientUrl}/reset-password/${resetToken}`;
     console.log(`[authController] 🔑 Password Reset Link for ${email}: ${resetUrl}`);
 
     if (!process.env.RESEND_API_KEY) {
