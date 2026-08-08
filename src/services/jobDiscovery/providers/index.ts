@@ -7,9 +7,17 @@ import { GreenhouseProvider } from './greenhouse';
 import { LeverProvider } from './lever';
 import { InternshalaProvider } from './internshala';
 import { NaukriProvider } from './naukri';
+import { LinkedInProvider } from './linkedin';
+import { ApnaProvider } from './apna';
 import { JobProvider } from '../types';
 
 export const providers: JobProvider[] = [
+  // Major Indian & Global Professional Portals
+  new LinkedInProvider(),
+  new NaukriProvider(),
+  new ApnaProvider(),
+  new InternshalaProvider(),
+
   // Public JSON APIs — fast, reliable, keyword-searchable
   new RemotiveProvider(),
   new HimalayasProvider(),
@@ -22,8 +30,4 @@ export const providers: JobProvider[] = [
   // ATS public boards — company-specific, rich role data
   new GreenhouseProvider(),
   new LeverProvider(),
-
-  // Native Playwright scraper providers
-  new InternshalaProvider(),
-  new NaukriProvider(),
 ];
