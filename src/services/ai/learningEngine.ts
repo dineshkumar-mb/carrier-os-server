@@ -7,7 +7,7 @@ export const runLearningCycle = async (userId: string): Promise<string> => {
     const profile = await CareerProfile.findOne({ userId });
     if (!profile) return 'No career profile found.';
 
-    const rejections = await Application.find({ userId, status: 'Rejected' }).populate('jobId');
+    const rejections = await Application.find({ userId, status: 'REJECTED' }).populate('jobId');
     if (rejections.length === 0) {
       return 'No rejections found yet. System continues learning.';
     }

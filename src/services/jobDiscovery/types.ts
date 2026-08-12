@@ -24,7 +24,7 @@ export interface JobInput {
   skills?: string[];
 }
 
-export type CanonicalJob = JobInput;
+export { CanonicalJob } from './CanonicalJob';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Provider interface — every data source implements this

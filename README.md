@@ -30,13 +30,13 @@ Carrier OS orchestrates 17 specialized agents structured across 5 execution laye
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │ 1. Discovery & Intelligence Layer                           │
-│ JobDiscoveryAgent ➔ JobIntelligenceAgent ➔ CompanyEnrichment │
+│ JobDiscoveryAgent ➔ JobVerificationAgent ➔ CompanyEnrichment│
 ├─────────────────────────────────────────────────────────────┤
 │ 2. Matching & Strategy Layer                                │
-│ AIMatchingAgent ➔ CandidateSkillGraph ➔ CareerHealthEngine │
+│ AIMatchingAgent ➔ CandidateSkillGraph ➔ CareerHealthEngine  │
 ├─────────────────────────────────────────────────────────────┤
 │ 3. Document Tailoring & Gate Layer                          │
-│ ResumeTailoring ➔ CoverLetterAgent ➔ TruthfulnessGate ➔ ATS │
+│ ATS-Tailored Resume ➔ Human-Like Cover Letter ➔ ATS Analyzer│
 ├─────────────────────────────────────────────────────────────┤
 │ 4. Execution & Automation Layer                             │
 │ PolicyEngine ➔ HumanApprovalCenter ➔ Playwright BrowserTool │

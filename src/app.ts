@@ -17,6 +17,7 @@ import analyticsRoutes from './api/routes/analyticsRoutes';
 import marketRoutes from './api/routes/marketRoutes';
 import policyRoutes from './api/routes/policyRoutes';
 import autonomousRoutes from './api/routes/autonomousRoutes';
+import jobVerificationRoutes from './api/routes/jobVerificationRoutes';
 import { protect } from './api/middleware/authMiddleware';
 
 import http from 'http';
@@ -38,6 +39,7 @@ app.use('/api/metrics', metricsRoutes);
 
 app.use('/api/auth', authRoutes);
 app.use('/api/jobs', protect, jobRoutes);
+app.use('/api/verification', protect, jobVerificationRoutes);
 app.use('/api/applications', protect, applicationRoutes);
 app.use('/api/resumes', protect, resumeRoutes);
 app.use('/api/ai', protect, aiRoutes);

@@ -12,6 +12,10 @@ import { OfferComparisonWorkflow } from './plugins/OfferComparisonWorkflow';
 import { ReferralWorkflow } from './plugins/ReferralWorkflow';
 import { CertificationPlannerWorkflow } from './plugins/CertificationPlannerWorkflow';
 
+import { JobVerificationWorkflow } from './plugins/JobVerificationWorkflow';
+import { CandidateMatchingWorkflow } from './plugins/CandidateMatchingWorkflow';
+import { ApplicationPreparationWorkflow } from './plugins/ApplicationPreparationWorkflow';
+
 export class WorkflowRegistry {
   private static instance: WorkflowRegistry;
   private workflows: Map<string, IWorkflow> = new Map();
@@ -29,6 +33,9 @@ export class WorkflowRegistry {
 
   private registerDefaultWorkflows(): void {
     const defaults: IWorkflow[] = [
+      new JobVerificationWorkflow(),
+      new CandidateMatchingWorkflow(),
+      new ApplicationPreparationWorkflow(),
       new ApplyToJobWorkflow(),
       new InterviewPrepWorkflow(),
       new ResumeAuditWorkflow(),

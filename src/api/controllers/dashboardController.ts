@@ -5,14 +5,17 @@ import { Resume, ResumeVersion } from '../../models/Resume';
 import { JobMatch } from '../../models/JobMatch';
 import { applicationQueue, jobDiscoveryQueue, schedulerQueue } from '../../workers/queue';
 import { AuthRequest } from '../middleware/authMiddleware';
+import { SourceReliabilityTracker } from '../../services/jobDiscovery/SourceReliabilityTracker';
+import { ApplicationExecutionRecord } from '../../models/ApplicationExecutionRecord';
 
 export const getDashboardStats = async (req: AuthRequest, res: Response) => {
   try {
     const userId = req.user?._id;
     if (!userId) return res.status(401).json({ message: 'User not found' });
 
+    const userIdStr = typeof userId === 'string' ? userId : String(userId);
     const jobsCount = await Job.countDocuments({});
-    const appliedCount = await Application.countDocuments({ userId, status: 'Applied' });
+    const appliedCount = await Application.countDocuments({ userId: userIdStr, status: 'APPLIED' });
 
     const resume = await Resume.findOne({ userId });
     let avgAtsScore = 0;
@@ -42,10 +45,10 @@ export const getDashboardStats = async (req: AuthRequest, res: Response) => {
       activeWorkersCount = 1;
     }
 
-    const totalApplications = await Application.countDocuments({ userId });
+    const totalApplications = await Application.countDocuments({ userId: userIdStr });
     const successRate = totalApplications > 0 ? Math.round((appliedCount / totalApplications) * 100) : 0;
-    const interviewCount = await Application.countDocuments({ userId, status: 'Interview' });
-    const rejectedCount = await Application.countDocuments({ userId, status: 'Rejected' });
+    const interviewCount = await Application.countDocuments({ userId: userIdStr, status: 'INTERVIEW' });
+    const rejectedCount = await Application.countDocuments({ userId: userIdStr, status: 'REJECTED' });
 
     // Dynamically calculate Career Health Score (0 - 100) from real DB activity
     let healthScore = 50; // Base score for active profile
@@ -93,10 +96,15 @@ export const getObservabilityStats = async (req: AuthRequest, res: Response) => 
     const avgCostPerCall = 0.00015;
     const totalAiCost = (totalAiCalls * avgCostPerCall).toFixed(4);
 
+    const sourceTelemetry = SourceReliabilityTracker.getInstance().getAllTelemetry();
+    const evidenceRecordCount = await ApplicationExecutionRecord.countDocuments({}).catch(() => 0);
+
     res.json({
       aiCalls: totalAiCalls,
       totalCost: `$${totalAiCost}`,
       avgResponseTime: '750ms',
+      evidenceRecordCount,
+      sourceTelemetry,
       queueLengths: {
         applyQueue: appQueueSize,
         discoveryQueue: discQueueSize,

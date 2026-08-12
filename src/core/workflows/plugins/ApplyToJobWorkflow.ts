@@ -7,7 +7,7 @@ export class ApplyToJobWorkflow implements IWorkflow {
     name: 'End-to-End Apply to Job Workflow',
     description: 'Declarative workflow for evaluating job match, tailoring resume & cover letter, running quality gates, and policy-based application submission.',
     requiredCapabilities: ['experience', 'architecture', 'ats', 'salary', 'reflection'],
-    qualityGates: ['gate_duplicate_check', 'gate_resume_ats', 'gate_risk_score'],
+    qualityGates: ['gate_duplicate_check', 'gate_job_authenticity', 'gate_resume_ats', 'gate_risk_score'],
     policyModesAllowed: ['MANUAL', 'ASSISTED', 'AUTOMATIC']
   };
 

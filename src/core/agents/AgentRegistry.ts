@@ -18,6 +18,7 @@ import { CalendarAgent } from './plugins/CalendarAgent';
 import { InterviewPreparationAgent } from './plugins/InterviewPreparationAgent';
 import { LearningAgent } from './plugins/LearningAgent';
 import { ReflectionAgent } from './plugins/ReflectionAgent';
+import { JobVerificationAgent } from './plugins/JobVerificationAgent';
 
 export class AgentRegistry {
   private static instance: AgentRegistry;
@@ -36,6 +37,7 @@ export class AgentRegistry {
 
   private registerAllDefaultAgents(): void {
     const defaultAgents: IAgent[] = [
+      new JobVerificationAgent(),
       new CareerPlannerAgent(),
       new ResumeIntelligenceAgent(),
       new JobDiscoveryAgent(),

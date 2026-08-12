@@ -4,7 +4,7 @@ import { TenantContext } from '../core/tenant/TenantContext';
 export abstract class BaseTenantRepository<T extends Document> {
   constructor(protected readonly model: Model<T>) {}
 
-  private isConnected(): boolean {
+  protected isConnected(): boolean {
     return mongoose.connection.readyState === 1;
   }
 

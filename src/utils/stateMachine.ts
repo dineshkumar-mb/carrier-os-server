@@ -34,20 +34,22 @@ export const transitionState = async (
   match.state = newState;
   await match.save();
 
-  // Sync to legacy Application model if it exists
-  const appStatusMap: Record<string, string> = {
-    Queued: 'Pending',
-    Applying: 'Auto-Applying',
-    Applied: 'Applied',
-    Interview: 'Interview',
-    Rejected: 'Rejected'
+  // Sync to Application model if it exists
+  const appStatusMap: Record<string, any> = {
+    Queued: 'QUEUED',
+    Applying: 'APPLYING',
+    Applied: 'APPLIED',
+    Interview: 'INTERVIEW',
+    Rejected: 'REJECTED'
   };
 
   const appStatus = appStatusMap[newState];
   if (appStatus) {
-    const app = await Application.findOne({ jobId: match.jobId, userId: match.userId });
+    const userIdStr = typeof match.userId === 'string' ? match.userId : String(match.userId);
+    const jobIdStr = typeof match.jobId === 'string' ? match.jobId : String(match.jobId);
+    const app = await Application.findOne({ canonicalJobId: jobIdStr, userId: userIdStr });
     if (app) {
-      app.status = appStatus as any;
+      app.status = appStatus;
       app.timeline.push({
         status: appStatus,
         timestamp: new Date(),

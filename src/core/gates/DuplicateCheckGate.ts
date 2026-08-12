@@ -24,7 +24,7 @@ export class DuplicateCheckGate {
         $or: [{ jobId }, { 'timeline.note': { $regex: jobUrl || 'xyz_none', $options: 'i' } }]
       });
 
-      if (existingApp && (existingApp.status === 'Applied' || existingApp.status === 'Auto-Applying' || existingApp.status === 'Interview')) {
+      if (existingApp && (existingApp.status === 'APPLIED' || existingApp.status === 'APPLYING' || existingApp.status === 'INTERVIEW' || existingApp.status === 'CONFIRMATION_RECEIVED')) {
         this.inMemoryApps.add(key);
         return {
           gateId: 'gate_duplicate_check',

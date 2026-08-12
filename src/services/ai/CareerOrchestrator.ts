@@ -175,15 +175,16 @@ export class CareerOrchestrator {
       const filenamePrefix = `resume_${userId}_${jobId}`;
       await generateResumeDocuments(userId, tailoredData, filenamePrefix);
 
-      let app = await Application.findOne({ jobId, userId });
+      let app = await Application.findOne({ canonicalJobId: jobId, userId });
       if (!app) {
         app = await Application.create({
-          jobId,
+          tenantId: 'default-tenant',
+          canonicalJobId: jobId,
           userId,
           resumeVersionId: resumeVersion._id,
           coverLetterId: coverLetter._id,
-          status: 'Pending',
-          timeline: [{ status: 'Pending', timestamp: new Date(), note: 'Application created by Carrier OS' }]
+          status: 'PREPARING',
+          timeline: [{ status: 'PREPARING', timestamp: new Date(), note: 'Application created by Carrier OS' }]
         });
       }
 

@@ -61,9 +61,10 @@ export const scanInboxEmails = async (req: AuthRequest, res: Response) => {
       });
 
       try {
-        const application = await Application.findOne({ userId, status: 'Pending' });
+        const userIdStr = typeof userId === 'string' ? userId : String(userId);
+        const application = await Application.findOne({ userId: userIdStr });
         if (application) {
-          application.status = classification === 'Interview' ? 'Interview' : 'Applied';
+          application.status = classification === 'Interview' ? 'INTERVIEW' : 'CONFIRMATION_RECEIVED';
           application.timeline.push({
             status: application.status,
             timestamp: new Date(),

@@ -13,7 +13,7 @@ export class ResumeTailoringAgent implements IAgent {
   public async execute(context: AgentContext): Promise<AgentResult> {
     const variantType = (context.customParams?.variantType as ResumeVariantType) || 'keyword_heavy';
 
-    const tailoredSummary = `Results-driven Senior Software Engineer specializing in ${context.jobTitle || 'Full Stack Development'}. Deep expertise building high-performance applications with ${context.company || 'top tech organizations'}.`;
+    const tailoredSummary = `Results-oriented ${context.jobTitle || 'Software Engineer'} with hands-on experience in full-stack architecture, distributed systems, and performance optimization. Demonstrated track record of delivering resilient cloud microservices and scalable web applications aligned with ${context.company || 'engineering'} technical requirements.`;
 
     return {
       agentId: this.id,

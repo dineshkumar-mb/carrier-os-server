@@ -67,6 +67,9 @@ export const getJobById = async (req: AuthRequest, res: Response) => {
   }
 };
 
+import { UserJobImportService } from '../../services/jobDiscovery/import/UserJobImportService';
+import { jobSourceRegistry } from '../../services/jobDiscovery/JobSourceRegistry';
+
 // @desc    Scan and discover matching jobs via AI Resume-Aware discovery engine
 // @route   POST /api/jobs/scan
 // @access  Private
@@ -91,5 +94,66 @@ export const scanJobs = async (req: AuthRequest, res: Response) => {
   } catch (error) {
     console.error('scanJobs error:', error);
     res.status(500).json({ message: 'Server Error scanning for jobs' });
+  }
+};
+
+// @desc    Import user job via URL or pasted JD text (for restricted portals)
+// @route   POST /api/jobs/import
+// @access  Private
+export const importJob = async (req: AuthRequest, res: Response) => {
+  try {
+    const userId = req.user?._id;
+    if (!userId) {
+      return res.status(401).json({ message: 'Authentication required' });
+    }
+
+    const result = await UserJobImportService.importUserJob({
+      userId: userId.toString(),
+      jobUrl: req.body.jobUrl,
+      jobTitle: req.body.jobTitle,
+      companyName: req.body.companyName,
+      jobDescription: req.body.jobDescription,
+      sourcePlatform: req.body.sourcePlatform
+    });
+
+    res.status(201).json(result);
+  } catch (error) {
+    console.error('importJob error:', error);
+    res.status(500).json({ message: 'Server error importing job' });
+  }
+};
+
+// @desc    Get plugin source health status and restricted source indicators
+// @route   GET /api/jobs/sources/health
+// @access  Private
+export const getSourceHealth = async (req: AuthRequest, res: Response) => {
+  try {
+    const pluginSources = jobSourceRegistry.getAllSources();
+    const healthResults = await Promise.all(
+      pluginSources.map(async (src: any) => {
+        const h = await src.healthCheck();
+        return {
+          id: src.id,
+          name: src.name,
+          status: h.healthy ? 'HEALTHY' : 'DEGRADED',
+          statusText: h.statusText || (h.healthy ? '🟢 Operational' : 'Degraded'),
+          capabilities: src.capabilities,
+          latencyMs: h.latencyMs
+        };
+      })
+    );
+
+    const restrictedSources = [
+      { id: 'naukri', name: 'Naukri', status: 'AUTH_REQUIRED', statusText: '⚪ Authorized integration unavailable' },
+      { id: 'apna', name: 'Apna', status: 'AUTH_REQUIRED', statusText: '⚪ Authorized integration unavailable' },
+      { id: 'internshala', name: 'Internshala', status: 'AUTH_REQUIRED', statusText: '⚪ Authorized integration unavailable' }
+    ];
+
+    res.json({
+      sources: [...healthResults, ...restrictedSources]
+    });
+  } catch (error) {
+    console.error('getSourceHealth error:', error);
+    res.status(500).json({ message: 'Server error checking source health' });
   }
 };

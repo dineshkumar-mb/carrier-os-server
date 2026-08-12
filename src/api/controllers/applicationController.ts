@@ -35,11 +35,13 @@ export const createApplication = async (req: AuthRequest, res: Response) => {
       return res.status(400).json({ message: 'jobId is required' });
     }
 
+    const userIdStr = typeof userId === 'string' ? userId : String(userId);
     const application = await Application.create({
-      userId,
-      jobId,
-      status: 'Pending',
-      timeline: [{ status: 'Pending', timestamp: new Date() }],
+      tenantId: (req.user as any)?.tenantId || 'default-tenant',
+      userId: userIdStr,
+      canonicalJobId: jobId,
+      status: 'PREPARING',
+      timeline: [{ status: 'PREPARING', timestamp: new Date() }],
     });
 
     res.status(201).json(application);
@@ -100,9 +102,9 @@ export const triggerAutoApply = async (req: AuthRequest, res: Response) => {
       return res.status(404).json({ message: 'Application not found' });
     }
 
-    application.status = 'Auto-Applying';
+    application.status = 'APPLYING';
     application.timeline.push({
-      status: 'Auto-Applying',
+      status: 'APPLYING',
       timestamp: new Date(),
       note: 'Form queued for Playwright automation'
     });

@@ -13,16 +13,16 @@ export class CoverLetterAgent implements IAgent {
     const company = context.company || 'TechScale Inc';
     const title = context.jobTitle || 'Senior Software Engineer';
 
-    const letterText = `Dear Hiring Team at ${company},
+    const letterText = `Hi ${company} Engineering Team,
 
-I am writing to express my enthusiasm for the ${title} role. With over 5 years of experience architecting high-availability full-stack platforms using React, TypeScript, and Node.js, I have followed ${company}'s work closely.
+When I came across the ${title} opening at ${company}, your work on scaling backend systems and delivering seamless developer experiences immediately stood out to me.
 
-In my recent projects, I led the migration of core services to modern TypeScript microservices, reducing latency by 40% while maintaining 99.9% uptime.
+In my recent work, I led the architectural overhaul of core API microservices using React, TypeScript, and Node.js. By introducing automated caching layer strategies and optimizing database query paths, our team reduced API p99 latency by 40% while sustaining 99.99% system availability during high-traffic surges.
 
-I would love to discuss how my background aligns with your engineering roadmap.
+What excites me most about ${company} is your commitment to engineering rigor and fast execution. I would welcome the opportunity to connect and discuss how my background in distributed systems and platform reliability can support your team's upcoming initiatives.
 
 Best regards,
-John Doe`;
+Candidate`;
 
     return {
       agentId: this.id,

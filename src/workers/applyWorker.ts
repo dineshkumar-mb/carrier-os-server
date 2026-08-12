@@ -29,13 +29,14 @@ export const startApplyWorker = () => {
         const application = await Application.findById(applicationId);
         if (!application) throw new Error('Application not found');
 
-        if (application.status === 'Applied') {
-          console.log(`[Worker] Application ${applicationId} is already in Applied state. Skipping duplicate task.`);
-          await emitLiveActivity(`[Worker] Application is already Applied. Skipping duplicate task.`);
+        if (application.status === 'APPLIED') {
+          console.log(`[Worker] Application ${applicationId} is already in APPLIED state. Skipping duplicate task.`);
+          await emitLiveActivity(`[Worker] Application is already APPLIED. Skipping duplicate task.`);
           return;
         }
 
-        const existingMatch = await JobMatch.findOne({ userId: application.userId, jobId: application.jobId });
+        const canonicalJobIdStr = (application as any).canonicalJobId || String((application as any).jobId);
+        const existingMatch = await JobMatch.findOne({ userId: application.userId, jobId: canonicalJobIdStr });
         if (existingMatch && existingMatch.state === 'Applied') {
           console.log(`[Worker] JobMatch for application ${applicationId} is already Applied. Skipping duplicate task.`);
           return;
@@ -65,14 +66,14 @@ export const startApplyWorker = () => {
           resumeData = masterResume.toObject();
         }
 
-        application.status = 'Auto-Applying';
-        application.timeline.push({ status: 'Auto-Applying', timestamp: new Date() });
+        application.status = 'APPLYING';
+        application.timeline.push({ status: 'APPLYING', timestamp: new Date() });
         await application.save();
 
-        let pdfPath = path.join(__dirname, '../temp', `resume_${application.userId}_${application.jobId}.pdf`);
+        let pdfPath = path.join(__dirname, '../temp', `resume_${application.userId}_${canonicalJobIdStr}.pdf`);
         if (!fs.existsSync(pdfPath)) {
           const { generateResumeDocuments } = require('../services/documents/DocumentService');
-          const prefix = `resume_${application.userId}_${application.jobId}`;
+          const prefix = `resume_${application.userId}_${canonicalJobIdStr}`;
           const docOutput = await generateResumeDocuments(application.userId.toString(), resumeData, prefix);
           pdfPath = docOutput.pdfPath;
         }
@@ -82,7 +83,9 @@ export const startApplyWorker = () => {
         const context = await browserPool.acquireContext();
         const page = await context.newPage();
         try {
-          await page.goto(jobUrl || 'https://google.com');
+          await page.goto(jobUrl, { waitUntil: 'networkidle', timeout: 30000 });
+          console.log(`[Worker] Page loaded successfully: ${jobUrl}`);
+          await emitLiveActivity(`[Worker] Page loaded successfully: ${jobUrl}`);
 
           if (page.url().includes('remotive.com')) {
             console.log(`[Worker] Detected Remotive.com URL. Locating real application redirect...`);
@@ -177,32 +180,34 @@ export const startApplyWorker = () => {
           await browserPool.releaseContext(context);
         }
 
-        const match = await JobMatch.findOne({ userId: application.userId, jobId: application.jobId });
+        const match = await JobMatch.findOne({ userId: application.userId, jobId: canonicalJobIdStr });
         if (match) {
           await transitionState(match, 'Applied', 'Application submitted successfully via automated worker.');
         }
 
-        application.status = 'Applied';
-        application.timeline.push({ status: 'Applied', timestamp: new Date(), note: 'Playwright automation succeeded' });
+        application.status = 'APPLIED';
+        application.submittedAt = new Date();
+        application.timeline.push({ status: 'APPLIED', timestamp: new Date(), note: 'Playwright automation succeeded' });
         await application.save();
 
         console.log(`[Worker] Job ${job.id} completed successfully.`);
-        await sendNotification(application.userId, `✅ Application submitted successfully for job ${application.jobId}`);
+        await sendNotification(application.userId, `✅ Application submitted successfully for job ${canonicalJobIdStr}`);
       } catch (error) {
         console.error(`[Worker] Error processing job ${job.id}:`, error);
         
         const application = await Application.findById(applicationId);
         if (application) {
-          application.status = 'Rejected';
-          application.timeline.push({ status: 'Rejected', timestamp: new Date(), note: `Playwright automation failed: ${(error as any).message}` });
+          const canonicalJobIdStr = (application as any).canonicalJobId || String((application as any).jobId);
+          application.status = 'FAILED';
+          application.timeline.push({ status: 'FAILED', timestamp: new Date(), note: `Playwright automation failed: ${(error as any).message}` });
           await application.save();
 
-          const match = await JobMatch.findOne({ userId: application.userId, jobId: application.jobId });
+          const match = await JobMatch.findOne({ userId: application.userId, jobId: canonicalJobIdStr });
           if (match) {
             await transitionState(match, 'Rejected', `Playwright application failed: ${(error as any).message}`);
           }
 
-          await sendNotification(application.userId, `❌ Application failed for job ${application.jobId}`);
+          await sendNotification(application.userId, `❌ Application failed for job ${canonicalJobIdStr}`);
         }
         
         throw error;

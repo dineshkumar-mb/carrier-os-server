@@ -5,9 +5,9 @@ export class JobDiscoveryWorkflow implements IWorkflow {
   public definition: WorkflowDefinition = {
     id: 'job_discovery_workflow',
     name: 'Job Discovery & AI Matching Workflow',
-    description: 'Scans global sources, deduplicates postings, parses skills, and calculates candidate fit scores.',
-    requiredCapabilities: ['Multi-Source Scraper', 'Skill Extraction', 'Match Scoring'],
-    qualityGates: ['DuplicateCheckGate', 'CompanyValidationGate'],
+    description: 'Scans global sources, deduplicates postings, verifies job authenticity, parses skills, and calculates candidate fit scores.',
+    requiredCapabilities: ['Multi-Source Scraper', 'Job Authenticity Verification', 'Skill Extraction', 'Match Scoring'],
+    qualityGates: ['DuplicateCheckGate', 'JobAuthenticityGate', 'CompanyValidationGate'],
     policyModesAllowed: ['Manual', 'Assisted', 'Automatic']
   };
 
@@ -21,10 +21,17 @@ export class JobDiscoveryWorkflow implements IWorkflow {
         status: 'pending'
       },
       {
+        nodeId: 'step_verify_authenticity',
+        taskName: 'Verify Job Authenticity & Risk Signals',
+        agentId: 'job_verification_agent',
+        dependencies: ['step_discover_jobs'],
+        status: 'pending'
+      },
+      {
         nodeId: 'step_extract_job_intel',
         taskName: 'Extract Job Intel & Skill Specs',
         agentId: 'job_intelligence_agent',
-        dependencies: ['step_discover_jobs'],
+        dependencies: ['step_verify_authenticity'],
         status: 'pending'
       },
       {

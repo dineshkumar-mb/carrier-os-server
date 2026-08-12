@@ -37,7 +37,7 @@ export class CareerHealthEngine {
       }
 
       let interviewScore = 70;
-      const interviewingApps = applications.filter(a => a.status === 'Interview');
+      const interviewingApps = applications.filter(a => a.status === 'INTERVIEW');
       if (interviewingApps.length > 0) {
         interviewScore += 20;
       }
